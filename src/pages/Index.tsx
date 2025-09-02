@@ -17,7 +17,7 @@ const Index = () => {
     // Revenue Share
     revenueGuests: 200,
     avgTicket: 2000,
-    partnerShare: 35,
+    partnerShare: 25,
     // Fix-fee
     barLines: 2,
     hours: 5,
@@ -38,9 +38,8 @@ const Index = () => {
       }
       case 'revenue': {
         const revenue = calculatorData.revenueGuests * calculatorData.avgTicket;
-        const barServiceShare = revenue * (calculatorData.partnerShare / 100);
-        const organizerProfit = revenue - barServiceShare;
-        return { revenue, barServiceShare, organizerProfit };
+        const organizerProfit = revenue * (calculatorData.partnerShare / 100);
+        return { revenue, organizerProfit };
       }
       case 'fixfee': {
         const baseHours = 5;
@@ -262,13 +261,18 @@ const Index = () => {
                           />
                         </div>
                         <div>
-                          <Label htmlFor="partnerShare" className="text-base font-medium">Доля партнёра (%)</Label>
+                          <Label htmlFor="partnerShare" className="text-base font-medium">Ваша доля (%)</Label>
                           <Input
                             id="partnerShare"
                             type="number"
+                            max="30"
                             value={calculatorData.partnerShare}
-                            onChange={(e) => setCalculatorData({...calculatorData, partnerShare: parseFloat(e.target.value) || 0})}
+                            onChange={(e) => {
+                              const value = Math.min(30, Math.max(0, parseFloat(e.target.value) || 0));
+                              setCalculatorData({...calculatorData, partnerShare: value});
+                            }}
                             className="mt-2"
+                            placeholder="до 30%"
                           />
                         </div>
                       </div>
@@ -283,10 +287,6 @@ const Index = () => {
                                 <div className="flex justify-between">
                                   <span>Общий оборот:</span>
                                   <span className="font-semibold">{formatPrice(results.revenue)}</span>
-                                </div>
-                                <div className="flex justify-between">
-                                  <span>Бар-сервису:</span>
-                                  <span className="text-red-600">-{formatPrice(results.barServiceShare)}</span>
                                 </div>
                                 <hr className="my-2" />
                                 <div className="flex justify-between text-lg font-bold">
