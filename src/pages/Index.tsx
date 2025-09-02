@@ -38,9 +38,9 @@ const Index = () => {
       }
       case 'revenue': {
         const revenue = calculatorData.revenueGuests * calculatorData.avgTicket;
-        const partnerProfit = revenue * (calculatorData.partnerShare / 100);
-        const ourProfit = revenue - partnerProfit;
-        return { revenue, partnerProfit, ourProfit };
+        const barServiceShare = revenue * (calculatorData.partnerShare / 100);
+        const organizerProfit = revenue - barServiceShare;
+        return { revenue, barServiceShare, organizerProfit };
       }
       case 'fixfee': {
         const baseHours = 5;
@@ -285,13 +285,13 @@ const Index = () => {
                                   <span className="font-semibold">{formatPrice(results.revenue)}</span>
                                 </div>
                                 <div className="flex justify-between">
-                                  <span>Партнёру (организатору):</span>
-                                  <span className="text-red-600">{formatPrice(results.partnerProfit)}</span>
+                                  <span>Бар-сервису:</span>
+                                  <span className="text-red-600">-{formatPrice(results.barServiceShare)}</span>
                                 </div>
                                 <hr className="my-2" />
                                 <div className="flex justify-between text-lg font-bold">
-                                  <span>Наша прибыль:</span>
-                                  <span className="text-green-600">{formatPrice(results.ourProfit)}</span>
+                                  <span>Ваша прибыль:</span>
+                                  <span className="text-green-600">{formatPrice(results.organizerProfit)}</span>
                                 </div>
                               </div>
                             );
