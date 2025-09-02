@@ -245,9 +245,10 @@ const Index = () => {
                           <Input
                             id="revenueGuests"
                             type="number"
-                            value={calculatorData.revenueGuests}
-                            onChange={(e) => setCalculatorData({...calculatorData, revenueGuests: parseInt(e.target.value) || 0})}
+                            value={calculatorData.revenueGuests || ''}
+                            onChange={(e) => setCalculatorData({...calculatorData, revenueGuests: e.target.value === '' ? 0 : parseInt(e.target.value) || 0})}
                             className="mt-2"
+                            placeholder="100"
                           />
                         </div>
                         <div>
@@ -255,9 +256,10 @@ const Index = () => {
                           <Input
                             id="avgTicket"
                             type="number"
-                            value={calculatorData.avgTicket}
-                            onChange={(e) => setCalculatorData({...calculatorData, avgTicket: parseFloat(e.target.value) || 0})}
+                            value={calculatorData.avgTicket || ''}
+                            onChange={(e) => setCalculatorData({...calculatorData, avgTicket: e.target.value === '' ? 0 : parseFloat(e.target.value) || 0})}
                             className="mt-2"
+                            placeholder="2000"
                           />
                         </div>
                         <div>
@@ -266,10 +268,14 @@ const Index = () => {
                             id="partnerShare"
                             type="number"
                             max="30"
-                            value={calculatorData.partnerShare}
+                            value={calculatorData.partnerShare || ''}
                             onChange={(e) => {
-                              const value = Math.min(30, Math.max(0, parseFloat(e.target.value) || 0));
-                              setCalculatorData({...calculatorData, partnerShare: value});
+                              if (e.target.value === '') {
+                                setCalculatorData({...calculatorData, partnerShare: 0});
+                              } else {
+                                const value = Math.min(30, Math.max(0, parseFloat(e.target.value) || 0));
+                                setCalculatorData({...calculatorData, partnerShare: value});
+                              }
                             }}
                             className="mt-2"
                             placeholder="до 30%"
