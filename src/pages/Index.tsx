@@ -11,39 +11,76 @@ import Icon from '@/components/ui/icon';
 const Index = () => {
   const [calculatorData, setCalculatorData] = useState({
     format: 'openbar',
+    // Open Bar
     guests: 100,
-    hours: 5,
+    openbarTariff: 'classic',
+    // Revenue Share
+    revenueGuests: 200,
+    avgTicket: 2000,
+    partnerShare: 35,
+    // Fix-fee
     barLines: 2,
+    hours: 5,
+    peak: 0,
+    regionFee: 0,
+    // Кальян
     hookahs: 0
   });
 
   const calculateCost = () => {
-    const baseCosts = {
-      openbar: { light: 1800, classic: 2450, premium: 3200 },
-      minimal: { base: 50000, perGuest: 800 },
-      revenue: { percentage: 30 },
-      fixfee: { perHour: 15000, perLine: 8000 },
-      hookah: { perPiece: 3500 }
-    };
-
     switch (calculatorData.format) {
-      case 'openbar':
-        return calculatorData.guests * baseCosts.openbar.classic;
-      case 'minimal':
-        return baseCosts.minimal.base + calculatorData.guests * baseCosts.minimal.perGuest;
-      case 'revenue':
-        return Math.round((calculatorData.guests * 2450 * baseCosts.revenue.percentage) / 100);
-      case 'fixfee':
-        return calculatorData.hours * baseCosts.fixfee.perHour + calculatorData.barLines * baseCosts.fixfee.perLine;
-      case 'hookah':
-        return calculatorData.hookahs * baseCosts.hookah.perPiece;
+      case 'openbar': {
+        const tariffs = { light: 1800, classic: 2450, premium: 3200 };
+        return calculatorData.guests * tariffs[calculatorData.openbarTariff];
+      }
+      case 'minimal': {
+        return 150000 + calculatorData.guests * 800;
+      }
+      case 'revenue': {
+        const revenue = calculatorData.revenueGuests * calculatorData.avgTicket;
+        const partnerProfit = revenue * (calculatorData.partnerShare / 100);
+        const ourProfit = revenue - partnerProfit;
+        return { revenue, partnerProfit, ourProfit };
+      }
+      case 'fixfee': {
+        const baseHours = 5;
+        const baseLine5h = 55000;
+        const extraHourFee = 6000;
+        const addLineDisc = 0.15;
+        const roundTo = 1000;
+        
+        const peak = calculatorData.peak / 100;
+        const extraHours = Math.max(0, calculatorData.hours - baseHours);
+        
+        let pricePerLine = baseLine5h * (1 + peak) + extraHours * extraHourFee + calculatorData.regionFee;
+        let total = pricePerLine;
+        if (calculatorData.barLines > 1) {
+          total += (calculatorData.barLines - 1) * pricePerLine * (1 - addLineDisc);
+        }
+        
+        return Math.ceil(total / roundTo) * roundTo;
+      }
+      case 'hookah': {
+        return calculatorData.hookahs * 3500;
+      }
       default:
         return 0;
     }
   };
 
   const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('ru-RU').format(price) + ' ₽';
+    return new Intl.NumberFormat('ru-RU').format(Math.round(price)) + ' ₽';
+  };
+
+  const getModelDescription = (format: string) => {
+    const descriptions = {
+      openbar: "Фиксированная стоимость за гостя. Клиент знает точную сумму заранее",
+      minimal: "Гарантированная минимальная сумма + доплата по факту потребления",
+      revenue: "Деление выручки между вами и организатором. Подходит для фестивалей",
+      fixfee: "Выезд барменов, оборудование, работа. Алкоголь клиента",
+      hookah: "Дополнительный сервис к основному бару"
+    };
+    return descriptions[format] || "";
   };
 
   return (
@@ -138,7 +175,8 @@ const Index = () => {
           <div className="max-w-4xl mx-auto px-2 sm:px-0">
             <Card className="p-8 border-2 border-gold/20 shadow-2xl">
               <CardHeader className="text-center">
-                <CardTitle className="text-2xl text-premium-black mb-8">Калькулятор стоимости</CardTitle>
+                <CardTitle className="text-2xl text-premium-black mb-4">Калькулятор стоимости</CardTitle>
+                <p className="text-gray-600">{getModelDescription(calculatorData.format)}</p>
               </CardHeader>
               <CardContent>
                 <Tabs value={calculatorData.format} onValueChange={(value) => setCalculatorData({...calculatorData, format: value})}>
@@ -150,76 +188,235 @@ const Index = () => {
                     <TabsTrigger value="hookah">Кальян</TabsTrigger>
                   </TabsList>
                   
-                  <div className="grid md:grid-cols-2 gap-8">
-                    <div className="space-y-6">
-                      <div>
-                        <Label htmlFor="guests" className="text-base font-medium">Количество гостей</Label>
-                        <Input
-                          id="guests"
-                          type="number"
-                          value={calculatorData.guests}
-                          onChange={(e) => setCalculatorData({...calculatorData, guests: parseInt(e.target.value) || 0})}
-                          className="mt-2"
-                        />
+                  <TabsContent value="openbar">
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <div className="space-y-4">
+                        <div>
+                          <Label htmlFor="guests" className="text-base font-medium">Количество гостей</Label>
+                          <Input
+                            id="guests"
+                            type="number"
+                            value={calculatorData.guests}
+                            onChange={(e) => setCalculatorData({...calculatorData, guests: parseInt(e.target.value) || 0})}
+                            className="mt-2"
+                          />
+                        </div>
                       </div>
                       
-                      <div>
-                        <Label htmlFor="hours" className="text-base font-medium">Количество часов</Label>
-                        <Input
-                          id="hours"
-                          type="number"
-                          value={calculatorData.hours}
-                          onChange={(e) => setCalculatorData({...calculatorData, hours: parseInt(e.target.value) || 0})}
-                          className="mt-2"
-                        />
-                      </div>
-                      
-                      <div>
-                        <Label htmlFor="barLines" className="text-base font-medium">Линии бара</Label>
-                        <Input
-                          id="barLines"
-                          type="number"
-                          value={calculatorData.barLines}
-                          onChange={(e) => setCalculatorData({...calculatorData, barLines: parseInt(e.target.value) || 0})}
-                          className="mt-2"
-                        />
-                      </div>
-                      
-                      <div>
-                        <Label htmlFor="hookahs" className="text-base font-medium">Количество кальянов</Label>
-                        <Input
-                          id="hookahs"
-                          type="number"
-                          value={calculatorData.hookahs}
-                          onChange={(e) => setCalculatorData({...calculatorData, hookahs: parseInt(e.target.value) || 0})}
-                          className="mt-2"
-                        />
+                      <div className="bg-gold/10 p-6 rounded-lg flex flex-col justify-center">
+                        <div className="text-center">
+                          <p className="text-lg text-gray-600 mb-4">Стоимость для клиента:</p>
+                          <p className="text-4xl font-bold text-gold mb-6">{formatPrice(typeof calculateCost() === 'number' ? calculateCost() : 0)}</p>
+                          <Button className="bg-gold hover:bg-gold-dark text-premium-black w-full">
+                            Получить точную смету
+                          </Button>
+                        </div>
                       </div>
                     </div>
                     
-                    <div className="bg-gold/10 p-8 rounded-lg flex flex-col justify-center items-center">
-                      <div className="text-center">
-                        <p className="text-lg text-gray-600 mb-4">Примерная стоимость:</p>
-                        <p className="text-4xl font-bold text-gold mb-6">{formatPrice(calculateCost())}</p>
-                        <Button className="bg-gold hover:bg-gold-dark text-premium-black w-full">
-                          Получить точную смету
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <TabsContent value="openbar" className="mt-8">
-                    <div className="grid md:grid-cols-3 gap-4">
-                      {['Light - 1,800 ₽', 'Classic - 2,450 ₽', 'Premium - 3,200 ₽'].map((pkg, i) => (
-                        <Card key={i} className="text-center p-4 border-gold/20">
-                          <CardContent className="pt-4">
-                            <p className="font-semibold text-premium-black">{pkg}</p>
-                            <p className="text-sm text-gray-600">за гостя</p>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-8">
+                      {[
+                        { key: 'light', name: 'Light', price: 1800 },
+                        { key: 'classic', name: 'Classic', price: 2450 },
+                        { key: 'premium', name: 'Premium', price: 3200 }
+                      ].map((tariff) => (
+                        <Card 
+                          key={tariff.key}
+                          className={`cursor-pointer transition-all border-2 ${
+                            calculatorData.openbarTariff === tariff.key 
+                              ? 'border-gold bg-gold/10' 
+                              : 'border-gray-200 hover:border-gold/50'
+                          }`}
+                          onClick={() => setCalculatorData({...calculatorData, openbarTariff: tariff.key})}
+                        >
+                          <CardContent className="text-center p-6">
+                            <h3 className="font-bold text-lg mb-2">{tariff.name} - {formatPrice(tariff.price)}</h3>
+                            <p className="text-gray-600">за гостя</p>
                           </CardContent>
                         </Card>
                       ))}
                     </div>
                   </TabsContent>
+
+                  <TabsContent value="revenue">
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <div className="space-y-4">
+                        <div>
+                          <Label htmlFor="revenueGuests" className="text-base font-medium">Ожидаемое количество гостей</Label>
+                          <Input
+                            id="revenueGuests"
+                            type="number"
+                            value={calculatorData.revenueGuests}
+                            onChange={(e) => setCalculatorData({...calculatorData, revenueGuests: parseInt(e.target.value) || 0})}
+                            className="mt-2"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="avgTicket" className="text-base font-medium">Средний чек (₽)</Label>
+                          <Input
+                            id="avgTicket"
+                            type="number"
+                            value={calculatorData.avgTicket}
+                            onChange={(e) => setCalculatorData({...calculatorData, avgTicket: parseFloat(e.target.value) || 0})}
+                            className="mt-2"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="partnerShare" className="text-base font-medium">Доля партнёра (%)</Label>
+                          <Input
+                            id="partnerShare"
+                            type="number"
+                            value={calculatorData.partnerShare}
+                            onChange={(e) => setCalculatorData({...calculatorData, partnerShare: parseFloat(e.target.value) || 0})}
+                            className="mt-2"
+                          />
+                        </div>
+                      </div>
+                      
+                      <div className="bg-gold/10 p-6 rounded-lg">
+                        <h3 className="font-semibold mb-4">Расчёт выручки:</h3>
+                        {(() => {
+                          const results = calculateCost();
+                          if (typeof results === 'object') {
+                            return (
+                              <div className="space-y-2">
+                                <div className="flex justify-between">
+                                  <span>Общий оборот:</span>
+                                  <span className="font-semibold">{formatPrice(results.revenue)}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span>Партнёру (организатору):</span>
+                                  <span className="text-red-600">{formatPrice(results.partnerProfit)}</span>
+                                </div>
+                                <hr className="my-2" />
+                                <div className="flex justify-between text-lg font-bold">
+                                  <span>Наша прибыль:</span>
+                                  <span className="text-green-600">{formatPrice(results.ourProfit)}</span>
+                                </div>
+                              </div>
+                            );
+                          }
+                          return null;
+                        })()}
+                      </div>
+                    </div>
+                  </TabsContent>
+
+                  <TabsContent value="fixfee">
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <div className="space-y-4">
+                        <div>
+                          <Label htmlFor="barLines" className="text-base font-medium">Линии бара</Label>
+                          <Input
+                            id="barLines"
+                            type="number"
+                            value={calculatorData.barLines}
+                            onChange={(e) => setCalculatorData({...calculatorData, barLines: parseInt(e.target.value) || 1})}
+                            className="mt-2"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="hours" className="text-base font-medium">Часы работы</Label>
+                          <Input
+                            id="hours"
+                            type="number"
+                            value={calculatorData.hours}
+                            onChange={(e) => setCalculatorData({...calculatorData, hours: parseInt(e.target.value) || 5})}
+                            className="mt-2"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="peak" className="text-base font-medium">Коэффициент времени (%)</Label>
+                          <select 
+                            value={calculatorData.peak}
+                            onChange={(e) => setCalculatorData({...calculatorData, peak: parseFloat(e.target.value)})}
+                            className="mt-2 w-full p-2 border rounded"
+                          >
+                            <option value={0}>Будни (0%)</option>
+                            <option value={10}>Пт/Сб (+10%)</option>
+                            <option value={15}>Ночь/Праздники (+15%)</option>
+                          </select>
+                        </div>
+                        <div>
+                          <Label htmlFor="regionFee" className="text-base font-medium">Надбавка за локацию (₽)</Label>
+                          <Input
+                            id="regionFee"
+                            type="number"
+                            value={calculatorData.regionFee}
+                            onChange={(e) => setCalculatorData({...calculatorData, regionFee: parseFloat(e.target.value) || 0})}
+                            className="mt-2"
+                            placeholder="0 - в городе, 10000 - за городом"
+                          />
+                        </div>
+                      </div>
+                      
+                      <div className="bg-gold/10 p-6 rounded-lg flex flex-col justify-center">
+                        <div className="text-center">
+                          <p className="text-lg text-gray-600 mb-4">Стоимость выезда:</p>
+                          <p className="text-4xl font-bold text-gold mb-6">{formatPrice(typeof calculateCost() === 'number' ? calculateCost() : 0)}</p>
+                          <Button className="bg-gold hover:bg-gold-dark text-premium-black w-full">
+                            Получить точную смету
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  </TabsContent>
+
+                  <TabsContent value="minimal">
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <div className="space-y-4">
+                        <div>
+                          <Label htmlFor="guests" className="text-base font-medium">Количество гостей</Label>
+                          <Input
+                            id="guests"
+                            type="number"
+                            value={calculatorData.guests}
+                            onChange={(e) => setCalculatorData({...calculatorData, guests: parseInt(e.target.value) || 0})}
+                            className="mt-2"
+                          />
+                        </div>
+                      </div>
+                      
+                      <div className="bg-gold/10 p-6 rounded-lg flex flex-col justify-center">
+                        <div className="text-center">
+                          <p className="text-lg text-gray-600 mb-4">Примерная стоимость:</p>
+                          <p className="text-4xl font-bold text-gold mb-6">{formatPrice(typeof calculateCost() === 'number' ? calculateCost() : 0)}</p>
+                          <Button className="bg-gold hover:bg-gold-dark text-premium-black w-full">
+                            Получить точную смету
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  </TabsContent>
+
+                  <TabsContent value="hookah">
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <div className="space-y-4">
+                        <div>
+                          <Label htmlFor="hookahs" className="text-base font-medium">Количество кальянов</Label>
+                          <Input
+                            id="hookahs"
+                            type="number"
+                            value={calculatorData.hookahs}
+                            onChange={(e) => setCalculatorData({...calculatorData, hookahs: parseInt(e.target.value) || 0})}
+                            className="mt-2"
+                          />
+                        </div>
+                      </div>
+                      
+                      <div className="bg-gold/10 p-6 rounded-lg flex flex-col justify-center">
+                        <div className="text-center">
+                          <p className="text-lg text-gray-600 mb-4">Стоимость кальянов:</p>
+                          <p className="text-4xl font-bold text-gold mb-6">{formatPrice(typeof calculateCost() === 'number' ? calculateCost() : 0)}</p>
+                          <Button className="bg-gold hover:bg-gold-dark text-premium-black w-full">
+                            Получить точную смету
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  </TabsContent>
+                  
+
                 </Tabs>
               </CardContent>
             </Card>
