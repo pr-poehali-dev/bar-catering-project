@@ -135,8 +135,8 @@ const Index = () => {
           <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 text-premium-black">
             5 моделей работы под ваши задачи
           </h2>
-          <div className="max-w-4xl mx-auto px-2 sm:px-0">
-            <Card className="p-8 border-2 border-gold/20 shadow-2xl">
+          <div className="max-w-4xl mx-auto px-1 sm:px-0">
+            <Card className="p-4 sm:p-8 border-2 border-gold/20 shadow-2xl">
               <CardHeader className="text-center">
                 <CardTitle className="text-2xl text-premium-black mb-8">Калькулятор стоимости</CardTitle>
               </CardHeader>
@@ -150,7 +150,7 @@ const Index = () => {
                     <TabsTrigger value="hookah">Кальян</TabsTrigger>
                   </TabsList>
                   
-                  <div className="grid md:grid-cols-2 gap-8">
+                  <div className="grid md:grid-cols-2 gap-4 sm:gap-8">
                     <div className="space-y-6">
                       <div>
                         <Label htmlFor="guests" className="text-base font-medium">Количество гостей</Label>
@@ -197,7 +197,7 @@ const Index = () => {
                       </div>
                     </div>
                     
-                    <div className="bg-gold/10 p-8 rounded-lg flex flex-col justify-center items-center">
+                    <div className="bg-gold/10 p-4 sm:p-8 rounded-lg flex flex-col justify-center items-center">
                       <div className="text-center">
                         <p className="text-lg text-gray-600 mb-4">Примерная стоимость:</p>
                         <p className="text-4xl font-bold text-gold mb-6">{formatPrice(calculateCost())}</p>
