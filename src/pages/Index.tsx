@@ -338,15 +338,16 @@ const Index = () => {
                           </select>
                         </div>
                         <div>
-                          <Label htmlFor="regionFee" className="text-base font-medium">Надбавка за локацию (₽)</Label>
-                          <Input
+                          <Label htmlFor="regionFee" className="text-base font-medium">Надбавка за локацию</Label>
+                          <select
                             id="regionFee"
-                            type="number"
                             value={calculatorData.regionFee}
                             onChange={(e) => setCalculatorData({...calculatorData, regionFee: parseFloat(e.target.value) || 0})}
-                            className="mt-2"
-                            placeholder="0 - в городе, 10000 - за городом"
-                          />
+                            className="mt-2 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                          >
+                            <option value={0}>Санкт-Петербург (центр)</option>
+                            <option value={10000}>За КАД (+15 км от центра) +10.000₽</option>
+                          </select>
                         </div>
                       </div>
                       
