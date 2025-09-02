@@ -179,12 +179,12 @@ const Index = () => {
               </CardHeader>
               <CardContent>
                 <Tabs value={calculatorData.format} onValueChange={(value) => setCalculatorData({...calculatorData, format: value})}>
-                  <TabsList className="grid w-full grid-cols-2 sm:grid-cols-5 mb-8">
-                    <TabsTrigger value="openbar">Open Bar</TabsTrigger>
-                    <TabsTrigger value="minimal">Минималка</TabsTrigger>
-                    <TabsTrigger value="revenue">Revenue</TabsTrigger>
-                    <TabsTrigger value="fixfee">Fix-fee</TabsTrigger>
-                    <TabsTrigger value="hookah">Кальян</TabsTrigger>
+                  <TabsList className="grid w-full grid-cols-3 sm:grid-cols-5 mb-8 text-xs sm:text-sm">
+                    <TabsTrigger value="openbar" className="px-2 py-2">Open Bar</TabsTrigger>
+                    <TabsTrigger value="minimal" className="px-2 py-2">Минималка</TabsTrigger>
+                    <TabsTrigger value="revenue" className="px-2 py-2">Revenue</TabsTrigger>
+                    <TabsTrigger value="fixfee" className="px-2 py-2">Fix-fee</TabsTrigger>
+                    <TabsTrigger value="hookah" className="px-2 py-2">Кальян</TabsTrigger>
                   </TabsList>
                   
                   <TabsContent value="openbar">
