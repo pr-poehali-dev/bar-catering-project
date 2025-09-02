@@ -47,7 +47,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white overflow-x-hidden">
       {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-premium-black via-gray-900 to-premium-black text-white min-h-screen flex items-center">
         <div 
@@ -58,15 +58,15 @@ const Index = () => {
             backgroundPosition: 'center'
           }}
         />
-        <div className="container mx-auto px-4 relative z-10">
+        <div className="container mx-auto px-2 sm:px-4 relative z-10 w-full max-w-full">
           <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-gold via-gold-light to-gold bg-clip-text text-transparent">
+            <h1 className="text-3xl sm:text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-gold via-gold-light to-gold bg-clip-text text-transparent">
               Бар-кейтеринг и кальян под ключ
             </h1>
             <h2 className="text-xl md:text-2xl mb-8 text-gray-300 font-light">
               в Санкт-Петербурге
             </h2>
-            <div className="flex flex-wrap justify-center gap-4 mb-12">
+            <div className="flex flex-wrap justify-center gap-2 sm:gap-4 mb-12 px-2">
               <Badge variant="outline" className="border-gold text-gold text-base px-4 py-2">
                 <Icon name="Shield" className="w-4 h-4 mr-2" />
                 Лицензия
@@ -103,7 +103,7 @@ const Index = () => {
 
       {/* Для кого мы работаем */}
       <section className="py-20 bg-premium-gray">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-2 sm:px-4 w-full max-w-full">
           <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 text-premium-black">
             Решаем задачи любого формата ивента
           </h2>
@@ -131,18 +131,18 @@ const Index = () => {
 
       {/* Калькулятор стоимости */}
       <section className="py-20 bg-white">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-2 sm:px-4 w-full max-w-full">
           <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 text-premium-black">
             5 моделей работы под ваши задачи
           </h2>
-          <div className="max-w-4xl mx-auto">
+          <div className="max-w-4xl mx-auto px-2 sm:px-0">
             <Card className="p-8 border-2 border-gold/20 shadow-2xl">
               <CardHeader className="text-center">
                 <CardTitle className="text-2xl text-premium-black mb-8">Калькулятор стоимости</CardTitle>
               </CardHeader>
               <CardContent>
                 <Tabs value={calculatorData.format} onValueChange={(value) => setCalculatorData({...calculatorData, format: value})}>
-                  <TabsList className="grid w-full grid-cols-5 mb-8">
+                  <TabsList className="grid w-full grid-cols-2 sm:grid-cols-5 mb-8">
                     <TabsTrigger value="openbar">Open Bar</TabsTrigger>
                     <TabsTrigger value="minimal">Минималка</TabsTrigger>
                     <TabsTrigger value="revenue">Revenue</TabsTrigger>
@@ -229,7 +229,7 @@ const Index = () => {
 
       {/* Кейсы */}
       <section className="py-20 bg-premium-gray">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-2 sm:px-4 w-full max-w-full">
           <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 text-premium-black">
             Наш опыт на цифрах
           </h2>
@@ -263,11 +263,11 @@ const Index = () => {
 
       {/* Как мы работаем */}
       <section className="py-20 bg-white">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-2 sm:px-4 w-full max-w-full">
           <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 text-premium-black">
             6 шагов до идеального бара на вашем ивенте
           </h2>
-          <div className="max-w-4xl mx-auto">
+          <div className="max-w-4xl mx-auto px-2 sm:px-0">
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {[
                 { step: "1", title: "Заполняете бриф", icon: "FileText" },
@@ -294,7 +294,7 @@ const Index = () => {
 
       {/* FAQ */}
       <section className="py-20 bg-premium-gray">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-2 sm:px-4 w-full max-w-full">
           <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 text-premium-black">
             Часто задаваемые вопросы
           </h2>
@@ -323,7 +323,7 @@ const Index = () => {
 
       {/* Партнёрам */}
       <section className="py-20 bg-white">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-2 sm:px-4 w-full max-w-full">
           <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 text-premium-black">
             Организаторы и площадки: выгодное партнёрство
           </h2>
@@ -383,7 +383,7 @@ const Index = () => {
 
       {/* Footer */}
       <footer className="bg-premium-black text-white py-12">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-2 sm:px-4 w-full max-w-full">
           <div className="grid md:grid-cols-3 gap-8">
             <div>
               <h3 className="text-xl font-semibold mb-4 text-gold">Контакты</h3>
