@@ -439,7 +439,7 @@ const Index = () => {
           </h2>
           <div className="grid md:grid-cols-3 gap-8">
             {[
-              { title: "Корпоратив", guests: "300 гостей", details: "3 линии бара, 5 часов", result: "средний чек 2,450 ₽/гость", revenue: "735,000 ₽" },
+              { title: "Корпоратив сети ресторанов", guests: "300 гостей", details: "3 линии бара, 5 часов", result: "средний чек 2,450 ₽/гость", revenue: "735,000 ₽" },
               { title: "Фестиваль Vtusse", guests: "1500 гостей", details: "revenue-share модель", result: "выручка 2,5 млн ₽", revenue: "партнёр получил 30%" },
               { title: "Новый год в Mitoya", guests: "150 гостей", details: "новогодняя вечеринка", result: "выручка 350,000 ₽", revenue: "премиум сервис" }
             ].map((caseItem, index) => (
